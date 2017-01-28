@@ -21,10 +21,9 @@ from the real estate investment (after deducting all the various fees and using 
 
 The suggested usage is as follows:
 
-1. Optionally create a Mortgage object (if you are modeling a loan financed real estate investment)
-2. Create an IncomeTaxCalc object
-3. Create a RealEstateCalc object, supplying the Mortgage and IncomeTaxCalc created from the previous steps
-4. Inspect attributes of RealEstateCalc to learn what you want about the investment
+1. Create an IncomeTaxCalc object
+2. Create a RealEstateCalc object, supplying the IncomeTaxCalc created from the previous steps
+3. Inspect attributes of RealEstateCalc to learn what you want about the investment
   
 
 ## Note on IncomeTaxCalc
@@ -33,3 +32,58 @@ means that any rental income from leasing apartments is pooled together with any
 prior to calculating taxes owed. So strangely enough, the profitability of a property is not just a function of the
 property but of its owner.
 
+## Sample Usage
+
+```python
+        # Sample income tax calculator 
+        income_tax_calc = IncomeTaxCalc(
+            employment_income=20000000,
+            rent=2400000,
+            is_rent_program=True,
+            other_income=1000000,
+            life_insurance_premium=30000,
+            medical_expense=10000,
+            number_of_dependents=2,
+            social_security_expense=None,
+            tax_deduction=100000,
+            is_resident_for_tax_purposes=True,
+        )
+
+        # Buying a brand new 100m property with a 30 year 1% mortgage, and selling it 32 years later
+        real_estate_calc = RealEstateCalc(
+            purchase_date=None,
+            purchase_price=100000000,
+            building_to_land_ratio=0.7,
+            size=100,
+            age=0,
+            mortgage_loan_to_value=0.9,
+            bank_valuation_to_actual=1,
+            mortgage_tenor=30,
+            mortgage_rate=0.01,
+            mortgage_initiation_fees=10000,
+            agent_fee_variable=0.03,
+            agent_fee_fixed=20000,
+            other_transaction_fees=0.01,
+
+            # Parameters associated with ongoing concern
+            monthly_fees=20000,
+            property_tax_rate=0.01,
+            maintenance_per_m2=1000,
+            useful_life=47,
+            calc_year=32,
+            income_tax_calculator=income_tax_calc,
+
+            # Parameters associated with renting out the real estate
+            gross_rental_yield=0.04,
+            renewal_income_rate=None,
+            rental_management_rental_fee=None,
+            rental_management_renewal_fee=None,
+
+            # Parameters associated with final disposal
+            is_primary_residence=0,
+            is_resident_for_tax_purposes=True,
+            sale_price=47000000,
+        )
+        
+        print(real_estate_calc.__dict__)
+```

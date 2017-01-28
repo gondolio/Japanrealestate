@@ -8,6 +8,12 @@ This project contains three classes that aim to help analyze real estate investm
 your income tax situation.
 * RealEstateCalc - a "calculator" of the economics of real estate ownership in Japan
 
+## Note on IncomeTaxCalc
+This is required for real estate analysis because income from real estate in Japan is taxed as regular income. This
+means that any rental income from leasing apartments is pooled together with any other regular income (like salary)
+prior to calculating taxes owed. So strangely enough, the profitability of a property is not just a function of the
+property but of its owner.
+
 ## Usage
 All three classes follow a design whereby (almost) every intermediary calculation is stored as a class attribute.
 This allows for easy inspection of every detail of the calculation as well as allowing overrides of certain portions of
@@ -25,13 +31,6 @@ The suggested usage is as follows:
 2. Create a RealEstateCalc object, supplying the IncomeTaxCalc created from the previous steps
 3. Inspect attributes of RealEstateCalc to learn what you want about the investment
   
-
-## Note on IncomeTaxCalc
-This is required for real estate analysis because income from real estate in Japan is taxed as regular income. This
-means that any rental income from leasing apartments is pooled together with any other regular income (like salary)
-prior to calculating taxes owed. So strangely enough, the profitability of a property is not just a function of the
-property but of its owner.
-
 ## Sample Usage
 
 ```python

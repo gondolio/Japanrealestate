@@ -51,9 +51,13 @@ class RealEstateCalc:
             mortgage_tenor=0,
             mortgage_rate=0,
             mortgage_initiation_fees=0,
+            renovation_cost=0,
+
+            # Parameters associated with initial purchase but also applied to final sale
             agent_fee_variable=0,
             agent_fee_fixed=0,
             other_transaction_fees=0,
+
 
             # Parameters associated with ongoing concern
             monthly_fees=0,
@@ -174,6 +178,8 @@ class RealEstateCalc:
         self.mortgage_tenor = mortgage_tenor
         self.mortgage_rate = mortgage_rate
         self.mortgage_initiation_fees = mortgage_initiation_fees
+        self.renovation_cost = renovation_cost
+
         self.agent_fee_variable = agent_fee_variable
         self.agent_fee_fixed = agent_fee_fixed
         self.other_transaction_fees = other_transaction_fees
@@ -267,7 +273,6 @@ class RealEstateCalc:
         self._calculate_purchase_price_building()
         self._calculate_purchase_price_land()
         self._calculate_purchase_agent_fee()
-        self._calculate_purchase_other_transaction_fees()
         self._calculate_purchase_other_transaction_fees()
         self._calculate_purchase_price_and_fees()
         self._calculate_purchase_initial_outlay()
@@ -394,7 +399,8 @@ class RealEstateCalc:
             self.purchase_price +
             self.purchase_agent_fee +
             self.purchase_other_transaction_fees +
-            self.mortgage_initiation_fees
+            self.mortgage_initiation_fees +
+            self.renovation_cost
         )
 
     def _calculate_purchase_initial_outlay(self):

@@ -746,7 +746,7 @@ class TestRealEstateCalc(TestCase):
         )
 
         real_estate_calc = RealEstateCalc(
-            purchase_date=None,
+            purchase_date=dt.date(2017, 1, 24),
             purchase_price=100000000,
             building_to_land_ratio=0.7,
             size=100,
@@ -835,6 +835,7 @@ class TestRealEstateCalc(TestCase):
             'purchase_price_land': 24400000.0,
             'renewal_income': 166666,
             'renewal_income_rate': 0.041666666666666664,
+            'renovation_cost': 0,
             'rental_income': 4000000,
             'rental_management_renewal_expense': 135000,
             'rental_management_renewal_fee': 0.03125,

@@ -93,6 +93,7 @@ class RealEstateCalc:
         :param bank_valuation_to_actual: Bank assessed property value / actual market value. Specify in decimal.
         :param mortgage_tenor: Term of loan in years
         :param mortgage_rate: Annual interest rate. Specify in decimal (i.e. 0.01 for 1%).
+        :param renovation_cost: Amount paid to renovate property after purchase.
         :param mortgage_initiation_fees: Sum of all fees paid for initiating mortgage
         :param agent_fee_variable: % of property market value paid to real estate agent. Specify in decimal.
         :param agent_fee_fixed: Other fees paid to agent on top of variable fees

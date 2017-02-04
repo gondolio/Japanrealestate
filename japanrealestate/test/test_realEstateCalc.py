@@ -133,7 +133,8 @@ class TestRealEstateCalc(TestCase):
         real_estate_calc.purchase_agent_fee = 3000000
         real_estate_calc.purchase_other_transaction_fees = 1000000
         real_estate_calc.mortgage_initiation_fees = 20000
-        expected = 100000000 + 3000000 + 1000000 + 20000
+        real_estate_calc.renovation_cost = 5000000
+        expected = 100000000 + 3000000 + 1000000 + 20000 + 5000000
         real_estate_calc._calculate_purchase_price_and_fees()
         self.assertEquals(real_estate_calc.purchase_price_and_fees, expected)
 

@@ -584,6 +584,18 @@ class TestRealEstateCalc(TestCase):
         real_estate_calc._calculate_book_value()
         self.assertEquals(real_estate_calc.book_value, 30000000)
 
+    def test__calculate_sale_price(self):
+        real_estate_calc = RealEstateCalc()
+
+        real_estate_calc.sale_price = 50000000
+        real_estate_calc.book_value = 45000000
+        real_estate_calc._calculate_sale_price()
+        self.assertEquals(real_estate_calc.sale_price, 50000000)
+
+        real_estate_calc.sale_price = None
+        real_estate_calc._calculate_sale_price()
+        self.assertEquals(real_estate_calc.sale_price, 45000000)
+
     def test__calculate_sale_proceeds_after_fees(self):
         real_estate_calc = RealEstateCalc()
 

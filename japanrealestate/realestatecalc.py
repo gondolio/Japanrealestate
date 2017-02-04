@@ -241,7 +241,7 @@ class RealEstateCalc:
         self.sale_agent_fee = None  # Total amount paid to agent when selling
         self.sale_other_transaction_fees = None  # Total non-agent amount paid when selling real estate
         self.depreciated_building_value = None  # Book value of building when sold (based on depreciation)
-        self.book_value = None  # Book value of entire property at calc_year. This is just for reference.
+        self.book_value = None  # Book value of entire property at calc_year. Used to estimate sale_price.
         self.sale_proceeds_after_fees = None  # Sale price after fees deducted
         self.acquisition_cost = None  # Part of base used for capital gains tax calculation when selling
         self.capital_gains_tax_primary_residence_deduction = None
@@ -593,15 +593,6 @@ class RealEstateCalc:
             copy_of_self.calculate_all_fields()
             self.cumulative_net_income += copy_of_self.cumulative_net_income
 
-    def _calculate_sale_agent_fee(self):
-        self.sale_agent_fee = int(
-            (self.sale_price * self.agent_fee_variable + self.agent_fee_fixed) *
-            (1 + taxconstants.CONSUMPTION_TAX)
-        )
-
-    def _calculate_sale_other_transaction_fees(self):
-        self.sale_other_transaction_fees = int(self.sale_price * self.other_transaction_fees)
-
     def _calculate_depreciation_cumulative(self):
         years_until_calc_year = range(0, self.calc_year + 1)
         depreciation_per_year = [self.depreciation_for_year(year=x) for x in years_until_calc_year]
@@ -615,6 +606,19 @@ class RealEstateCalc:
         This field is just for reference - it is the land value + depreciated building value assuming no capital gains
         """
         self.book_value = self.purchase_price_land + self.depreciated_building_value
+
+    def _calculate_sale_price(self):
+        if self.sale_price is None:
+            self.sale_price = self.book_value
+
+    def _calculate_sale_agent_fee(self):
+        self.sale_agent_fee = int(
+            (self.sale_price * self.agent_fee_variable + self.agent_fee_fixed) *
+            (1 + taxconstants.CONSUMPTION_TAX)
+        )
+
+    def _calculate_sale_other_transaction_fees(self):
+        self.sale_other_transaction_fees = int(self.sale_price * self.other_transaction_fees)
 
     def _calculate_sale_proceeds_after_fees(self):
         self.sale_proceeds_after_fees = self.sale_price - self.sale_agent_fee - self.sale_other_transaction_fees

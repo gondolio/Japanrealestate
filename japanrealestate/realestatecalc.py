@@ -76,7 +76,7 @@ class RealEstateCalc:
             # Parameters associated with final disposal
             is_primary_residence=0,
             is_resident_for_tax_purposes=False,
-            sale_price=0,
+            sale_price=None,
     ):
         """
         Parameters associated with initial purchase:
@@ -303,10 +303,11 @@ class RealEstateCalc:
 
         # Disposal derived fields
         self._calculate_depreciation_cumulative()
-        self._calculate_sale_agent_fee()
-        self._calculate_sale_other_transaction_fees()
         self._calculate_depreciated_building_value()
         self._calculate_book_value()
+        self._calculate_sale_price()
+        self._calculate_sale_agent_fee()
+        self._calculate_sale_other_transaction_fees()
         self._calculate_sale_proceeds_after_fees()
         self._calculate_acquisition_cost()
         self._calculate_capital_gains_tax_primary_residence_deduction()

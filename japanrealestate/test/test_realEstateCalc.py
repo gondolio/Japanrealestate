@@ -612,8 +612,9 @@ class TestRealEstateCalc(TestCase):
         real_estate_calc.purchase_price = 100000000
         real_estate_calc.purchase_agent_fee = 3000000
         real_estate_calc.purchase_other_transaction_fees = 1000000
+        real_estate_calc.renovation_cost = 5000000
         real_estate_calc._calculate_acquisition_cost()
-        self.assertEquals(real_estate_calc.acquisition_cost, 104000000)
+        self.assertEquals(real_estate_calc.acquisition_cost, 109000000)
 
     def test__calculate_capital_gains_tax_primary_residence_deduction(self):
         real_estate_calc = RealEstateCalc()

@@ -633,7 +633,12 @@ class RealEstateCalc:
 
     def _calculate_acquisition_cost(self):
         """Differs from purchase_price_and_fees because mortgage fees are probably not relevant for capital gains tax"""
-        self.acquisition_cost = self.purchase_price + self.purchase_agent_fee + self.purchase_other_transaction_fees
+        self.acquisition_cost = (
+            self.purchase_price +
+            self.purchase_agent_fee +
+            self.purchase_other_transaction_fees +
+            self.renovation_cost
+        )
 
     def _calculate_capital_gains_tax_primary_residence_deduction(self):
         """From # http://www.akasakarealestate.com/wiki/index.php/Taxes#Capital_Gains"""

@@ -588,7 +588,7 @@ class RealEstateCalc:
         """The amount of tax owed for rental income at calc_year based on net_income_taxable."""
         self.income_tax_real_estate = 0  # Set 0 tax if calculator is not provided
         if self.income_tax_calculator is not None:
-            self.income_tax_real_estate = max(0, self.income_tax - self.income_tax_calculator.total_income_tax)
+            self.income_tax_real_estate = int(max(0, self.income_tax - self.income_tax_calculator.total_income_tax))
 
     def _calculate_net_income_after_taxes(self):
         """The income at calc_year after expenses, mortgage and taxes"""

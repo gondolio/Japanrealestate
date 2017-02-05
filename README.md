@@ -120,6 +120,7 @@ There are some examples in the examples directory.
      'income_tax': 4676082.2,
      'income_tax_calculator': <japanrealestate.incometaxcalc.IncomeTaxCalc object at 0x101cc57b8>,
      'income_tax_real_estate': 309415,
+     'income_tax_shield': 0,
      'is_primary_residence': 0,
      'is_resident_for_tax_purposes': True,
      'maintenance_expense': 100000,

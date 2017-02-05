@@ -240,7 +240,8 @@ class RealEstateCalc:
         self.home_loan_deduction = None  # Tax relief provided by loan financed primary residences provide
         self.income_tax = None  # Total annual tax on income (real estate + whatever income_tax_calculator includes)
         self.income_tax_real_estate = None  # Total annual tax on real estate income only
-        self.net_income_after_taxes = None  # Annual income after expenses/depreciation/interest/tax, see note above.
+        self.income_tax_shield = None  # Income tax not paid as a result of holding the property (if it is a tax loss)
+        self.net_income_after_taxes = None  # Gain from income + tax shield after expenses/depreciation/interest/tax.
         self.cumulative_net_income = None  # Sum of net_income_after_taxes from first year until calc_year
         self.mortgage_amount_outstanding = None  # Amount of loan outstanding *after* calc_year
 
@@ -301,6 +302,7 @@ class RealEstateCalc:
         self._calculate_home_loan_deduction()
         self._calculate_income_tax()
         self._calculate_income_tax_real_estate()
+        self._calculate_income_tax_shield()
         self._calculate_net_income_after_taxes()
         self._calculate_cumulative_net_income()
         self._calculate_mortgage_amount_outstanding()
@@ -590,9 +592,19 @@ class RealEstateCalc:
         if self.income_tax_calculator is not None:
             self.income_tax_real_estate = int(max(0, self.income_tax - self.income_tax_calculator.total_income_tax))
 
+    def _calculate_income_tax_shield(self):
+        """The amount of reduction in income taxes as a result of holding the property"""
+        self.income_tax_shield = 0  # Will only be non-zero if the property yields a tax loss this year
+        if self.income_tax_calculator is not None:
+            self.income_tax_shield = int(max(0, self.income_tax_calculator.total_income_tax - self.income_tax))
+
     def _calculate_net_income_after_taxes(self):
         """The income at calc_year after expenses, mortgage and taxes"""
-        self.net_income_after_taxes = self.net_income_before_taxes - self.income_tax_real_estate
+        self.net_income_after_taxes = (
+            self.net_income_before_taxes -
+            self.income_tax_real_estate +
+            self.income_tax_shield
+        )
 
     def _calculate_cumulative_net_income(self):
         """Recursively use this class to sum up all income from 0 to calc_year"""

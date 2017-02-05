@@ -609,7 +609,7 @@ class RealEstateCalc:
         """Amount of loan outstanding *after* calc_year ends"""
         if self.mortgage is not None:
             month = (self.calc_year + 1) * 12
-            self.mortgage_amount_outstanding = sum(self.mortgage.amortization_schedule[month:])
+            self.mortgage_amount_outstanding = sum(self.mortgage.principal_schedule[month:])
         else:
             self.mortgage_amount_outstanding = 0
 

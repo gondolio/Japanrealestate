@@ -62,7 +62,8 @@ class Mortgage:
         if self.tenor == 0:
             self.principal_schedule = []
         elif self.rate == 0:
-            self.principal_schedule = self.principal / len(self.loan_periods)
+            num_periods = len(self.loan_periods)
+            self.principal_schedule = [self.principal / num_periods] * num_periods
         else:
             self.principal_schedule = - np.ppmt(self.rate / 12,
                                                 self.loan_periods,

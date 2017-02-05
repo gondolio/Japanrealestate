@@ -43,7 +43,7 @@ class TestMortgage(TestCase):
         loan.rate = 0
         loan._calculate_principal_schedule()
         expected = [200000 / 30 / 12] * 30 * 12
-        np.testing.assert_almost_equal(loan.principal_schedule, expected, decimal=2)
+        self.assertEquals(loan.principal_schedule, expected)
 
         loan.rate = 6.5 / 100
         loan._calculate_principal_schedule()

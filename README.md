@@ -113,6 +113,7 @@ There are some examples in the examples directory.
 #    'depreciation_cumulative': 53080830,
 #    'depreciation_percentage': 0.02127659574468085,
 #    'depreciation_years': 47,
+#    'equity_value': 46919170.0,
 #    'gross_rental_yield': 0.04,
 #    'home_loan_deduction': 0,
 #    'income_tax': 4676082.2,

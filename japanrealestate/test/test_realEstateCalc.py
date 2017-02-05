@@ -604,6 +604,14 @@ class TestRealEstateCalc(TestCase):
         real_estate_calc._calculate_book_value()
         self.assertEquals(real_estate_calc.book_value, 30000000)
 
+    def test__calculate_equity_value(self):
+        real_estate_calc = RealEstateCalc()
+
+        real_estate_calc.book_value = 20000000
+        real_estate_calc.mortgage_amount_outstanding = 5000000
+        real_estate_calc._calculate_equity_value()
+        self.assertEquals(real_estate_calc.equity_value, 15000000)
+
     def test__calculate_sale_price(self):
         real_estate_calc = RealEstateCalc()
 
@@ -823,6 +831,7 @@ class TestRealEstateCalc(TestCase):
             'depreciation_cumulative': 53080830,
             'depreciation_percentage': 0.02127659574468085,
             'depreciation_years': 47,
+            'equity_value': 46919170.0,
             'gross_rental_yield': 0.04,
             'home_loan_deduction': 0,
             'income_tax': 4676082.2,

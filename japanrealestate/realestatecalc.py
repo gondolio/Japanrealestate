@@ -250,6 +250,7 @@ class RealEstateCalc:
         self.sale_other_transaction_fees = None  # Total non-agent amount paid when selling real estate
         self.depreciated_building_value = None  # Book value of building when sold (based on depreciation)
         self.book_value = None  # Book value of entire property at calc_year. Used to estimate sale_price.
+        self.equity_value = None  # Value of property after loan is paid back
         self.sale_proceeds_after_fees = None  # Sale price after fees deducted
         self.acquisition_cost = None  # Part of base used for capital gains tax calculation when selling
         self.capital_gains_tax_primary_residence_deduction = None
@@ -308,6 +309,7 @@ class RealEstateCalc:
         self._calculate_depreciation_cumulative()
         self._calculate_depreciated_building_value()
         self._calculate_book_value()
+        self._calculate_equity_value()
         self._calculate_sale_price()
         self._calculate_sale_agent_fee()
         self._calculate_sale_other_transaction_fees()
@@ -621,9 +623,13 @@ class RealEstateCalc:
 
     def _calculate_book_value(self):
         """
-        This field is just for reference - it is the land value + depreciated building value assuming no capital gains
+        The land value + depreciated building value, assumes no capital gains
         """
         self.book_value = self.purchase_price_land + self.depreciated_building_value
+
+    def _calculate_equity_value(self):
+        """ The amount the property is worth after paying back mortgage """
+        self.equity_value = self.book_value - self.mortgage_amount_outstanding
 
     def _calculate_sale_price(self):
         if self.sale_price is None:

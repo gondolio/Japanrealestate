@@ -743,15 +743,15 @@ class TestRealEstateCalc(TestCase):
         real_estate_calc._calculate_sale_proceeds_net()
         self.assertEquals(real_estate_calc.sale_proceeds_net, 49000000)
 
-    def test__calculate_net_income_on_realestate(self):
+    def test__calculate_net_profit_on_realestate(self):
         real_estate_calc = RealEstateCalc()
 
         real_estate_calc.sale_proceeds_net = 50000000
         real_estate_calc.cumulative_net_income = 2000000
         real_estate_calc.purchase_initial_outlay = 10000000
         real_estate_calc.mortgage_amount_outstanding = 39000000
-        real_estate_calc._calculate_net_income_on_realestate()
-        self.assertEquals(real_estate_calc.net_income_on_realestate, 3000000)
+        real_estate_calc._calculate_net_profit_on_realestate()
+        self.assertEquals(real_estate_calc.net_profit_on_realestate, 3000000)
 
     def test__calculate_all_fields(self):
         """
@@ -851,7 +851,7 @@ class TestRealEstateCalc(TestCase):
             'mortgage_tenor': 30,
             'net_income_after_taxes': 2166250.3999999994,
             'net_income_before_taxes': 2475666,
-            'net_income_on_realestate': 7271551.2,
+            'net_profit_on_realestate': 7271551.2,
             'net_income_taxable': 867156,
             'other_transaction_fees': 0.01,
             'property_tax_expense': 1000000,

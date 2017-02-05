@@ -258,7 +258,7 @@ class RealEstateCalc:
         self.capital_gains_tax_rate = None  # CGT rate used to calculate CGT
         self.capital_gains_tax = None  # CGT
         self.sale_proceeds_net = None  # Sale proceeds after fees and taxes
-        self.net_income_on_realestate = None  # Sale proceeds after fees/taxes + net rental income - purchase price
+        self.net_profit_on_realestate = None  # Net profit (including past income) after selling and paying back loan
 
         # Calculate!
         self.calculate_all_fields()
@@ -320,7 +320,7 @@ class RealEstateCalc:
         self._calculate_capital_gains_tax_rate()
         self._calculate_capital_gains_tax()
         self._calculate_sale_proceeds_net()
-        self._calculate_net_income_on_realestate()
+        self._calculate_net_profit_on_realestate()
 
     # Real estate specific constants
     _RENEWAL_INCOME_RATE_DEFAULT = 1 / 24  # Lease renewed every 2 years and one month rent is paid by tenant
@@ -609,7 +609,7 @@ class RealEstateCalc:
         """Amount of loan outstanding *after* calc_year ends"""
         if self.mortgage is not None:
             month = (self.calc_year + 1) * 12
-            self.mortgage_amount_outstanding = sum(self.mortgage.principal_schedule[month:])
+            self.mortgage_amount_outstanding = int(sum(self.mortgage.principal_schedule[month:]))
         else:
             self.mortgage_amount_outstanding = 0
 
@@ -619,17 +619,17 @@ class RealEstateCalc:
         self.depreciation_cumulative = sum(depreciation_per_year)
 
     def _calculate_depreciated_building_value(self):
-        self.depreciated_building_value = self.purchase_price_building - self.depreciation_cumulative
+        self.depreciated_building_value = int(self.purchase_price_building - self.depreciation_cumulative)
 
     def _calculate_book_value(self):
         """
         The land value + depreciated building value, assumes no capital gains
         """
-        self.book_value = self.purchase_price_land + self.depreciated_building_value
+        self.book_value = int(self.purchase_price_land + self.depreciated_building_value)
 
     def _calculate_equity_value(self):
         """ The amount the property is worth after paying back mortgage """
-        self.equity_value = self.book_value - self.mortgage_amount_outstanding
+        self.equity_value = int(self.book_value - self.mortgage_amount_outstanding)
 
     def _calculate_sale_price(self):
         if self.sale_price is None:
@@ -698,8 +698,8 @@ class RealEstateCalc:
     def _calculate_sale_proceeds_net(self):
         self.sale_proceeds_net = self.sale_proceeds_after_fees - self.capital_gains_tax
 
-    def _calculate_net_income_on_realestate(self):
-        self.net_income_on_realestate = (self.sale_proceeds_net +
+    def _calculate_net_profit_on_realestate(self):
+        self.net_profit_on_realestate = (self.sale_proceeds_net +
                                          self.cumulative_net_income -
                                          self.purchase_initial_outlay -
                                          self.mortgage_amount_outstanding)

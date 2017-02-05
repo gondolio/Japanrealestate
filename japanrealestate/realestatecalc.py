@@ -242,6 +242,7 @@ class RealEstateCalc:
         self.income_tax_real_estate = None  # Total annual tax on real estate income only
         self.net_income_after_taxes = None  # Annual income after expenses/depreciation/interest/tax, see note above.
         self.cumulative_net_income = None  # Sum of net_income_after_taxes from first year until calc_year
+        self.mortgage_amount_outstanding = None  # Amount of loan outstanding *after* calc_year
 
         # Disposal derived fields
         self.depreciation_cumulative = None  # Sum of depreciation since purchase until calc_year, see note above.
@@ -301,6 +302,7 @@ class RealEstateCalc:
         self._calculate_income_tax_real_estate()
         self._calculate_net_income_after_taxes()
         self._calculate_cumulative_net_income()
+        self._calculate_mortgage_amount_outstanding()
 
         # Disposal derived fields
         self._calculate_depreciation_cumulative()
@@ -601,6 +603,14 @@ class RealEstateCalc:
             copy_of_self.calculate_all_fields()
             self.cumulative_net_income += copy_of_self.cumulative_net_income
 
+    def _calculate_mortgage_amount_outstanding(self):
+        """Amount of loan outstanding *after* calc_year ends"""
+        if self.mortgage is not None:
+            month = (self.calc_year + 1) * 12
+            self.mortgage_amount_outstanding = sum(self.mortgage.amortization_schedule[month:])
+        else:
+            self.mortgage_amount_outstanding = 0
+
     def _calculate_depreciation_cumulative(self):
         years_until_calc_year = range(0, self.calc_year + 1)
         depreciation_per_year = [self.depreciation_for_year(year=x) for x in years_until_calc_year]
@@ -685,4 +695,5 @@ class RealEstateCalc:
     def _calculate_net_income_on_realestate(self):
         self.net_income_on_realestate = (self.sale_proceeds_net +
                                          self.cumulative_net_income -
-                                         self.purchase_price_and_fees)
+                                         self.purchase_initial_outlay -
+                                         self.mortgage_amount_outstanding)

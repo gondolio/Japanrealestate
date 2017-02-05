@@ -525,6 +525,25 @@ class TestRealEstateCalc(TestCase):
         real_estate_calc._calculate_cumulative_net_income()
         self.assertEquals(real_estate_calc.cumulative_net_income, year_0_income + year_1_income * 3)
 
+    def test__calculate_mortgage_amount_outstanding(self):
+        real_estate_calc = RealEstateCalc()
+
+        self.assertEquals(real_estate_calc.mortgage_amount_outstanding, 0)
+
+        real_estate_calc.mortgage = Mortgage(
+            principal=24000000,
+            tenor=2,
+            rate=0
+        )
+
+        real_estate_calc.calc_year = 0
+        real_estate_calc._calculate_mortgage_amount_outstanding()
+        self.assertEquals(real_estate_calc.mortgage_amount_outstanding, 12000000)
+
+        real_estate_calc.calc_year = 1
+        real_estate_calc._calculate_mortgage_amount_outstanding()
+        self.assertEquals(real_estate_calc.mortgage_amount_outstanding, 0)
+
     def test__calculate_sale_agent_fee(self):
         real_estate_calc = RealEstateCalc()
 
@@ -719,11 +738,12 @@ class TestRealEstateCalc(TestCase):
     def test__calculate_net_income_on_realestate(self):
         real_estate_calc = RealEstateCalc()
 
-        real_estate_calc.sale_proceeds_net = 49000000
+        real_estate_calc.sale_proceeds_net = 50000000
         real_estate_calc.cumulative_net_income = 2000000
-        real_estate_calc.purchase_price_and_fees = 45000000
+        real_estate_calc.purchase_initial_outlay = 10000000
+        real_estate_calc.mortgage_amount_outstanding = 39000000
         real_estate_calc._calculate_net_income_on_realestate()
-        self.assertEquals(real_estate_calc.net_income_on_realestate, 6000000)
+        self.assertEquals(real_estate_calc.net_income_on_realestate, 3000000)
 
     def test__calculate_all_fields(self):
         """
@@ -815,13 +835,14 @@ class TestRealEstateCalc(TestCase):
             'monthly_fees': 20000,
             'monthly_fees_annualized': 240000,
             'mortgage': real_estate_calc.mortgage,
+            'mortgage_amount_outstanding': 0,
             'mortgage_initiation_fees': 10000,
             'mortgage_loan_to_value': 0.9,
             'mortgage_rate': 0.01,
             'mortgage_tenor': 30,
             'net_income_after_taxes': 2166250.3999999994,
             'net_income_before_taxes': 2475666,
-            'net_income_on_realestate': -82728448.80000001,
+            'net_income_on_realestate': 7271551.2,
             'net_income_taxable': 867156,
             'other_transaction_fees': 0.01,
             'property_tax_expense': 1000000,

@@ -23,6 +23,8 @@ output_file_name_to_income_tax_calc = {
 }
 
 # The property details come from the agent
+# We do not specify a sales price so the model will resort to book value, which is a conservative estimate assuming
+# no capital gains and that the property depreciates to zero value over its useful life
 real_estate_calc = RealEstateCalc(
     purchase_price=68000000,
     building_to_land_ratio=0.3,

@@ -100,8 +100,8 @@ class IncomeTaxCalc:
         self._calculate_total_income()
         self._calculate_employment_income_after_rent_program()
         self._calculate_social_security_expense()
-        self._calculate_employment_income_deduction()
         self._calculate_employment_income_for_tax()
+        self._calculate_employment_income_deduction()
         self._calculate_total_income_for_tax()
         self._calculate_deduction_dependents()
         self._calculate_deduction_total()
@@ -152,6 +152,57 @@ class IncomeTaxCalc:
         {
             'bounds': [12000000 + 1, float('inf')],
             'function': lambda x: 2200000
+        },
+    ]
+
+    _EMPLOYMENT_INCOME_FOR_TAX_TABLE = [
+        {
+            'bounds': [0, 650999],
+            'function': lambda x: 0
+        },
+        {
+            'bounds': [651000, 1618999],
+            'function': lambda x: x-650000
+        },
+        {
+            'bounds': [1619000, 1619999],
+            'function': lambda x: 969000
+        },
+        {
+            'bounds': [1620000, 1621999],
+            'function': lambda x: 970000
+        },
+        {
+            'bounds': [1622000, 1623999],
+            'function': lambda x: 972000
+        },
+        {
+            'bounds': [1624000, 1627999],
+            'function': lambda x: 974000
+        },
+        {
+            'bounds': [1628000, 1799999],
+            'function': lambda x: round(x/(4*1000))*1000 * 2.4
+        },
+        {
+            'bounds': [1800000, 3599999],
+            'function': lambda x: round(x / (4 * 1000)) * 1000 * 2.8 - 180000
+        },
+        {
+            'bounds': [3600000, 6599999],
+            'function': lambda x: round(x / (4 * 1000)) * 1000 * 3.2 - 540000
+        },
+        {
+            'bounds': [6600000, 9999999],
+            'function': lambda x: x*0.9 - 1200000
+        },
+        {
+            'bounds': [10000000, 11999999],
+            'function': lambda x: x*0.95 - 1700000
+        },
+        {
+            'bounds': [12000000, 10000000000000],
+            'function': lambda x: x - 2300000
         },
     ]
 
@@ -254,15 +305,15 @@ class IncomeTaxCalc:
             self.social_security_expense = int(total_expense * 0.5)  # Half paid by employer
 
     def _calculate_employment_income_deduction(self):
-        income_rule = self.__lookup_in_tax_table(self.employment_income_after_rent_program,
-                                                 self._EMPLOYMENT_INCOME_DEDUCTION_TABLE)
         # Deduction cannot exceed income
-        self.employment_income_deduction = min(int(income_rule['function'](self.employment_income_after_rent_program)),
-                                               self.employment_income_after_rent_program)
+        self.employment_income_deduction = self.employment_income_after_rent_program - self.employment_income_for_tax
 
     def _calculate_employment_income_for_tax(self):
         """Converts an actual annual employment income into the income used for tax calculations"""
-        self.employment_income_for_tax = self.employment_income_after_rent_program - self.employment_income_deduction
+        income_for_tax_rule = self.__lookup_in_tax_table(self.employment_income_after_rent_program,
+                                                 self._EMPLOYMENT_INCOME_FOR_TAX_TABLE)
+        self.employment_income_for_tax = min(int(income_for_tax_rule['function'](self.employment_income_after_rent_program)),
+                                               self.employment_income_after_rent_program)
 
     def _calculate_total_income_for_tax(self):
         self.total_income_for_tax = self.employment_income_for_tax + self.other_income

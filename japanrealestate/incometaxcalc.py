@@ -120,40 +120,11 @@ class IncomeTaxCalc:
     _LEGAL_RENT_RATE = 0.95  # The amount of rent deducted from your employment_income (pre-tax) as part of rent program
 
     """
-    From http://taxsummaries.pwc.com/uk/taxsummaries/wwts.nsf/ID/Japan-Individual-Deductions
-    A resident taxpayer who earns income from employment is eligible for an earned income deduction for purposes
-    of both the national income and local inhabitant’s tax. The amount of the deduction is based on the amount of
-    the employment income and is determined by reference to a deduction table.
-
-    https://home.kpmg.com/xx/en/home/insights/2011/12/japan-income-tax.html is also a very good resource
+    A deduction is applied to the gross revenue (収入(syunyuu)) depending upon its type and amount. For employment
+    income, the net revenue (所得 (syotoku)) is calculated from the gross amount based on the following table.
+    Please refer to page 9 of the following file (page 8 based on documents numbering)
+    http://www.nta.go.jp/tetsuzuki/shinkoku/shotoku/tebiki2016/pdf/01.pdf
     """
-    _EMPLOYMENT_INCOME_DEDUCTION_TABLE = [
-        {
-            'bounds': [0, 1800000],
-            'function': lambda x: max(0.4 * x, 650000)
-        },
-        {
-            'bounds': [1800000 + 1, 3600000],
-            'function': lambda x: 0.3 * x + 180000
-        },
-        {
-            'bounds': [3600000 + 1, 6600000],
-            'function': lambda x: 0.2 * x + 540000
-        },
-        {
-            'bounds': [6600000 + 1, 10000000],
-            'function': lambda x: 0.1 * x + 1200000
-        },
-        {
-            'bounds': [10000000 + 1, 12000000],
-            # Original formula is "0.05 + 1700000" but cap is lowering from 2300000 to 2200000 in 2017
-            'function': lambda x: 0.05 * x + 1600000
-        },
-        {
-            'bounds': [12000000 + 1, float('inf')],
-            'function': lambda x: 2200000
-        },
-    ]
 
     _EMPLOYMENT_INCOME_FOR_TAX_TABLE = [
         {
@@ -304,16 +275,16 @@ class IncomeTaxCalc:
             total_expense = health_insurance_expense + social_pension_standard_expense
             self.social_security_expense = int(total_expense * 0.5)  # Half paid by employer
 
-    def _calculate_employment_income_deduction(self):
-        # Deduction cannot exceed income
-        self.employment_income_deduction = self.employment_income_after_rent_program - self.employment_income_for_tax
-
     def _calculate_employment_income_for_tax(self):
         """Converts an actual annual employment income into the income used for tax calculations"""
         income_for_tax_rule = self.__lookup_in_tax_table(self.employment_income_after_rent_program,
                                                  self._EMPLOYMENT_INCOME_FOR_TAX_TABLE)
         self.employment_income_for_tax = min(int(income_for_tax_rule['function'](self.employment_income_after_rent_program)),
                                                self.employment_income_after_rent_program)
+
+    def _calculate_employment_income_deduction(self):
+        # Deduction cannot exceed income
+        self.employment_income_deduction = self.employment_income_after_rent_program - self.employment_income_for_tax
 
     def _calculate_total_income_for_tax(self):
         self.total_income_for_tax = self.employment_income_for_tax + self.other_income

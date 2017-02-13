@@ -842,7 +842,7 @@ class TestRealEstateCalc(TestCase):
             'capital_gains_tax': 0,
             'capital_gains_tax_primary_residence_deduction': 0,
             'capital_gains_tax_rate': 0.2,
-            'cumulative_net_income': -23442447,
+            'cumulative_net_income': 17323959,
             'depreciated_building_value': 22519170.0,
             'depreciation': 1608510,
             'depreciation_annual': 1608510,
@@ -870,7 +870,7 @@ class TestRealEstateCalc(TestCase):
             'mortgage_tenor': 30,
             'net_income_after_taxes': 2165558,
             'net_income_before_taxes': 2475666,
-            'net_profit_on_realestate': 7271553,
+            'net_profit_on_realestate': 48037959,
             'net_income_taxable': 867156,
             'other_transaction_fees': 0.01,
             'property_tax_expense': 1000000,
@@ -919,6 +919,7 @@ class TestRealEstateCalc(TestCase):
         self.assertIsNotNone(real_estate_calc.mortgage)
 
         # Confirm values match expected
+        all_match = True
         for key, value in actual.items():
             expected_value = expected[key]
             if isinstance(value, Number):
@@ -926,5 +927,7 @@ class TestRealEstateCalc(TestCase):
                 expected_value = round(expected_value, 5)
 
             if value != expected_value:
+                all_match = False
                 print("{} with value {} does not match the expected value of {}".format(key, value, expected_value))
-                self.assertEquals(value, expected[key])
+
+        self.assertEquals(all_match, True)

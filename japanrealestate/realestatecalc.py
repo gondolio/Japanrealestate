@@ -584,7 +584,7 @@ class RealEstateCalc:
             copied_calc.calculate_all_fields()
 
             # Calculate tax
-            self.income_tax = copied_calc.total_income_tax
+            self.income_tax = int(copied_calc.total_income_tax)
 
     def _calculate_income_tax_real_estate(self):
         """The amount of tax owed for rental income at calc_year based on net_income_taxable."""

@@ -460,7 +460,7 @@ class TestRealEstateCalc(TestCase):
 
         real_estate_calc.income_tax_calculator = income_tax_calc
         real_estate_calc._calculate_income_tax()
-        self.assertEquals(real_estate_calc.income_tax, 4803596.6)
+        self.assertEquals(real_estate_calc.income_tax, 4759903)
 
         # Confirm tax calc is unmodified
         self.assertEquals(income_tax_calc_before.__dict__, real_estate_calc.income_tax_calculator.__dict__)
@@ -468,7 +468,7 @@ class TestRealEstateCalc(TestCase):
         # Confirm deduction is used
         real_estate_calc.home_loan_deduction = 300000
         real_estate_calc._calculate_income_tax()
-        self.assertEquals(real_estate_calc.income_tax, 4503596.6)
+        self.assertEquals(real_estate_calc.income_tax, 4459903)
 
     def test__calculate_income_tax_real_estate(self):
         real_estate_calc = RealEstateCalc()
@@ -852,9 +852,9 @@ class TestRealEstateCalc(TestCase):
             'equity_value': 46919170.0,
             'gross_rental_yield': 0.04,
             'home_loan_deduction': 0,
-            'income_tax': 4676082.2,
+            'income_tax': 4633082,
             'income_tax_calculator': income_tax_calc,
-            'income_tax_real_estate': 309415,
+            'income_tax_real_estate': 310108,
             'income_tax_shield': 0,
             'is_primary_residence': 0,
             'is_resident_for_tax_purposes': True,
@@ -868,7 +868,7 @@ class TestRealEstateCalc(TestCase):
             'mortgage_loan_to_value': 0.9,
             'mortgage_rate': 0.01,
             'mortgage_tenor': 30,
-            'net_income_after_taxes': 2166251,
+            'net_income_after_taxes': 2165558,
             'net_income_before_taxes': 2475666,
             'net_profit_on_realestate': 7271553,
             'net_income_taxable': 867156,

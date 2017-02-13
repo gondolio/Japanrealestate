@@ -277,13 +277,22 @@ class IncomeTaxCalc:
 
     def _calculate_employment_income_for_tax(self):
         """Converts an actual annual employment income into the income used for tax calculations"""
-        income_for_tax_rule = self.__lookup_in_tax_table(self.employment_income_after_rent_program,
-                                                 self._EMPLOYMENT_INCOME_FOR_TAX_TABLE)
-        self.employment_income_for_tax = min(int(income_for_tax_rule['function'](self.employment_income_after_rent_program)),
-                                               self.employment_income_after_rent_program)
+        income_for_tax_rule = self.__lookup_in_tax_table(
+            self.employment_income_after_rent_program,
+            self._EMPLOYMENT_INCOME_FOR_TAX_TABLE
+        )
+
+        self.employment_income_for_tax = min(
+            int(
+                income_for_tax_rule['function'](
+                    self.employment_income_after_rent_program
+                )
+            ),
+            self.employment_income_after_rent_program
+        )
 
     def _calculate_employment_income_deduction(self):
-        # Deduction cannot exceed income
+        """This field is just for reference"""
         self.employment_income_deduction = self.employment_income_after_rent_program - self.employment_income_for_tax
 
     def _calculate_total_income_for_tax(self):

@@ -50,19 +50,16 @@ class TestIncomeTaxCalc(TestCase):
         self.assertEquals(income_tax_calc.employment_income_deduction, 0)
 
         income_tax_calc.employment_income_after_rent_program = 11000000
+        income_tax_calc.employment_income_for_tax = 8850000
         income_tax_calc._calculate_employment_income_deduction()
         self.assertEquals(income_tax_calc.employment_income_deduction, 2150000)
-
-        income_tax_calc.employment_income_after_rent_program = 100000000
-        income_tax_calc._calculate_employment_income_deduction()
-        self.assertEquals(income_tax_calc.employment_income_deduction, 2200000)
 
     def test__calculate_employment_income_for_tax(self):
         income_tax_calc = IncomeTaxCalc()
         income_tax_calc.employment_income_after_rent_program = 10000000
         income_tax_calc.employment_income_deduction = 1000000
         income_tax_calc._calculate_employment_income_for_tax()
-        self.assertEquals(income_tax_calc.employment_income_for_tax, 9000000)
+        self.assertEquals(income_tax_calc.employment_income_for_tax, 7800000)
 
     def test__calculate_total_income_for_tax(self):
         income_tax_calc = IncomeTaxCalc()
@@ -200,4 +197,4 @@ class TestIncomeTaxCalc(TestCase):
             is_resident_for_tax_purposes=True,
         )
 
-        self.assertAlmostEqual(income_tax_calc.effective_tax_rate, 0.281, places=3)
+        self.assertAlmostEqual(income_tax_calc.effective_tax_rate, 0.27861, places=4)

@@ -233,7 +233,7 @@ class RealEstateCalc:
         To see their value on any year, change calc_year and call calculate_all_fields.
         """
         self.calc_date = None  # Date corresponding to calc_year
-        self.total_expense = None  # Annual total expenses. Excludes purchase_initial_outlay as it is not recurring.
+        self.total_expense = None  # Annual recurring total expenses (excludes mortgage)
         self.net_income_before_taxes = None  # Annual income after expenses/mortgage payment, see note above.
         self.depreciation = None  # Depreciation for calc_year
         self.net_income_taxable = None  # Annual income after expenses/depreciation/interest, see note above.
@@ -486,12 +486,12 @@ class RealEstateCalc:
             self.property_tax_expense
         )
 
-        if self.mortgage is not None and self.calc_year < self.mortgage.tenor:
-            self.total_expense += int(self.mortgage.monthly_payment * 12)  # Assume tenor is whole number of years
-
     def _calculate_net_income_before_taxes(self):
         """ The income at input year after expenses and mortgage payment. This is the actual cash flow income """
         self.net_income_before_taxes = self.total_income - self.total_expense
+
+        if self.mortgage is not None and self.calc_year < self.mortgage.tenor:
+            self.net_income_before_taxes -= int(self.mortgage.monthly_payment * 12)  # Assume tenor is whole # of years
 
     def depreciation_for_year(self, year):
         """Returns the depreciation amount for input year"""

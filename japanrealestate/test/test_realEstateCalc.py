@@ -269,19 +269,6 @@ class TestRealEstateCalc(TestCase):
         real_estate_calc._calculate_total_expense()
         self.assertEquals(real_estate_calc.total_expense, 1000000)
 
-        # Active mortgage
-        real_estate_calc.mortgage = Mortgage()  # Create a dummy mortgage and override values
-        real_estate_calc.mortgage.monthly_payment = 100000
-        real_estate_calc.mortgage.tenor = 10
-        real_estate_calc.calc_year = 9
-        real_estate_calc._calculate_total_expense()
-        self.assertEquals(real_estate_calc.total_expense, 2200000)
-
-        # Mortgage already paid off
-        real_estate_calc.calc_year = 10
-        real_estate_calc._calculate_total_expense()
-        self.assertEquals(real_estate_calc.total_expense, 1000000)
-
     def test__calculate_calc_date(self):
         real_estate_calc = RealEstateCalc()
 
@@ -296,6 +283,19 @@ class TestRealEstateCalc(TestCase):
 
         real_estate_calc.total_income = 5000000
         real_estate_calc.total_expense = 3000000
+        real_estate_calc._calculate_net_income_before_taxes()
+        self.assertEquals(real_estate_calc.net_income_before_taxes, 2000000)
+
+        # Active mortgage
+        real_estate_calc.mortgage = Mortgage()  # Create a dummy mortgage and override values
+        real_estate_calc.mortgage.monthly_payment = 100000
+        real_estate_calc.mortgage.tenor = 10
+        real_estate_calc.calc_year = 9
+        real_estate_calc._calculate_net_income_before_taxes()
+        self.assertEquals(real_estate_calc.net_income_before_taxes, 2000000 - 12 * 100000)
+
+        # Mortgage already paid off
+        real_estate_calc.calc_year = 10
         real_estate_calc._calculate_net_income_before_taxes()
         self.assertEquals(real_estate_calc.net_income_before_taxes, 2000000)
 
@@ -842,7 +842,7 @@ class TestRealEstateCalc(TestCase):
             'capital_gains_tax': 0,
             'capital_gains_tax_primary_residence_deduction': 0,
             'capital_gains_tax_rate': 0.2,
-            'cumulative_net_income': 17323959,
+            'cumulative_net_income': -27992342,
             'depreciated_building_value': 22519170.0,
             'depreciation': 1608510,
             'depreciation_annual': 1608510,
@@ -870,7 +870,7 @@ class TestRealEstateCalc(TestCase):
             'mortgage_tenor': 30,
             'net_income_after_taxes': 2165558,
             'net_income_before_taxes': 2475666,
-            'net_profit_on_realestate': 48037959,
+            'net_profit_on_realestate': 2721658,
             'net_income_taxable': 867156,
             'other_transaction_fees': 0.01,
             'property_tax_expense': 1000000,
@@ -923,6 +923,7 @@ class TestRealEstateCalc(TestCase):
         for key, value in actual.items():
             expected_value = expected[key]
             if isinstance(value, Number):
+                # noinspection PyTypeChecker
                 value = round(value, 5)
                 expected_value = round(expected_value, 5)
 
